@@ -83,6 +83,7 @@ Examples:
     parser.add_argument("--no-cut", action="store_true", help="Only identify timestamps and generate report; do not download or cut video")
     parser.add_argument("--fast-cut", action="store_true", help="Use instant stream copy (-c copy) instead of frame-accurate re-encode")
     parser.add_argument("--chunk-size", type=int, default=240, help="Transcript chunk size in seconds (default: 240)")
+    parser.add_argument("--max-chunks", type=int, default=None, help="Limit number of chunks to analyze (useful for long 2h+ videos)")
 
     args = parser.parse_args()
 
@@ -133,7 +134,11 @@ Examples:
 
     # 4. Semantic Chunking
     chunks = chunk_transcript(transcript, chunk_duration_sec=args.chunk_size, overlap_sec=40)
-    console.print(f"[cyan]Analyzing content across {len(chunks)} contextual chunk(s)...[/cyan]")
+    if args.max_chunks and len(chunks) > args.max_chunks:
+        console.print(f"[yellow]Limiting analysis to first {args.max_chunks} of {len(chunks)} chunks (--max-chunks).[/yellow]")
+        chunks = chunks[:args.max_chunks]
+    else:
+        console.print(f"[cyan]Analyzing content across {len(chunks)} contextual chunk(s)...[/cyan]")
 
     # 5. Analyze with Local LLM
     all_raw_highlights = []

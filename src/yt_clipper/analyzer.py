@@ -171,7 +171,7 @@ Respond ONLY with the JSON array:
 def deduplicate_and_rank_highlights(
     highlights: List[Dict[str, Any]],
     min_score: int = 7,
-    min_duration_sec: int = 15,
+    min_duration_sec: int = 5,
     max_duration_sec: int = 180
 ) -> List[Dict[str, Any]]:
     """
